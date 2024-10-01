@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+     <link rel="icon" href="https://i.ibb.co/VphHJZ9/GC.jpg" type="image/png">
+</head>
+<body>
+
+<h1>Fetching US3</h1>
+
+<script>
+    const url = 'https://raw.githubusercontent.com/voucan/us3/refs/heads/main/us3.html';
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.open();
+            document.write(data);
+            document.close();
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            document.body.innerHTML = 'Failed to load external content.';
+        });
+</script>
+
+</body>
+</html>
