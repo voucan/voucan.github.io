@@ -18,20 +18,96 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
         }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
         .overlay {
-
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Comfortaa', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 10;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+        .overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
         }
         .container {
-
+            position: relative;
+            z-index: 1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1f1e1e;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
         }
- 
+
+        .container img {
+            width: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        .container h1 {
+            margin: 10px 0;
+        }
+
+        .bio {
+            margin: 10px 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .divider {
+            margin: 20px 0;
+            border-bottom: 1px solid #fff;
+        }
+
+        .icons a {
+            margin: 0 10px;
+            font-size: 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
     </style>
 </head>
 <body>
 
     <div class="overlay" onclick="enterSite()">Click to Enter</div>
     <div class="container">
-
+        <img src="https://i.ibb.co/bQmXfM8/vcngrey.webp" alt="Voucan">
+        <h1>Voucan</h1>
+        <div class="bio">Hi, I'm Voucan! I love to code; I know a bit of Lua, HTML, and JavaScript. You can find my unblocked games site below.</div>
+        <div class="divider"></div>
+        <div class="icons">
+            <a href="https://discord.com/users/1043692379896557589" target="_blank"><i class="fa-brands fa-discord"></i></a>
+            <a href="https://tiktok.com/@voucan.ubg" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://us4-ubg.github.io" target="_blank"><i class="fa-solid fa-gamepad"></i></a>
+        </div>
     </div>
 
     <canvas id="visualizerCanvas"></canvas>
@@ -48,7 +124,6 @@
         function setupCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
         }
 
         function setupAudio() {
@@ -66,7 +141,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             analyser.getByteFrequencyData(dataArray);
             dataArray.forEach((value, index) => {
-                ctx.fillStyle = `rgb(${value}, ${index % 255}, ${255 - value})`;
+                ctx.fillStyle = `rgba(${value}, ${index % 255}, ${255 - value}, 0.5)`;
                 ctx.beginPath();
                 ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, value / 20, 0, Math.PI * 2);
                 ctx.fill();
@@ -77,7 +152,9 @@
         function enterSite() {
             document.querySelector('.overlay').classList.add('fade-out');
             audio.play();
-            setupAudio();
+            if (!audioContext) {
+                setupAudio();
+            }
         }
 
         window.addEventListener('resize', setupCanvas);
