@@ -138,15 +138,15 @@
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             analyser.getByteFrequencyData(dataArray);
-            const barWidth = (canvas.width / dataArray.length) * 2.5; // Bar width
+            const barWidth = (canvas.width / dataArray.length) * 2.5;
             let barHeight;
             let x = 0;
 
             for (let i = 0; i < dataArray.length; i++) {
-                barHeight = dataArray[i] / 2; // Scale bar height
+                barHeight = dataArray[i] / 2; 
                 ctx.fillStyle = `rgba(${barHeight + 100}, 50, 255 - barHeight, 1)`;
                 ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                x += barWidth + 1; // Bar spacing
+                x += barWidth + 1; 
             }
 
             requestAnimationFrame(animate);
