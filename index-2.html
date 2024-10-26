@@ -1,38 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta property="og:title" content="Voucan - Profile">
-    <meta property="og:description" content="View voucans profile card!">
-    <meta property="og:image" content="https://i.ibb.co/bQmXfM8/vcngrey.webp">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Voucan - Profile">
+    <meta property="og:description" content="View Voucan's Profile">
+    <meta property="og:image" content="https://i.ibb.co/bQmXfM8/vcngrey.webp">
     <title>Voucan - Profile</title>
-     <link rel="icon" href="https://i.ibb.co/bQmXfM8/vcngrey.webp" type="image/png">
+    <link rel="icon" href="https://i.ibb.co/bQmXfM8/vcngrey.webp" type="image/png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Comfortaa', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 10;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+        .overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1f1e1e;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            z-index: 1;
+        }
+        .container img {
+            width: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .container h1 {
+            margin: 10px 0;
+        }
+        .bio {
+            margin: 10px 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .divider {
+            margin: 20px 0;
+            border-bottom: 1px solid #fff;
+        }
+        .icons a {
+            margin: 0 10px;
+            font-size: 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .icons a:hover {
+            color: #ccc;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Fetching Profile</h1>
+    <div class="overlay" onclick="enterSite()">Click to Enter</div>
+    <div class="container">
+        <img src="https://i.ibb.co/bQmXfM8/vcngrey.webp" alt="Voucan">
+        <h1>Voucan</h1>
+        <div class="bio">Hi, I'm Voucan! I love to code; I know a bit of Lua, HTML, and JavaScript. You can find my unblocked games site below.</div>
+        <div class="divider"></div>
+        <div class="icons">
+            <a href="https://discord.com/users/1043692379896557589" target="_blank"><i class="fa-brands fa-discord"></i></a>
+            <a href="https://tiktok.com/@voucan.ubg" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://us4-ubg.github.io" target="_blank"><i class="fa-solid fa-gamepad"></i></a>
+        </div>
+    </div>
 
-<script>
-    const url = 'https://raw.githubusercontent.com/voucan/voucan.github.io/refs/heads/main/pfp';
+    <canvas id="visualizerCanvas"></canvas>
+    <audio id="audio" loop>
+        <source src="https://voucan.github.io/Super%20Ponybeat%20%20Discord%20%5BThe%20Original!%5D%20by%20Eurobeat.mp3" type="audio/mp3">
+    </audio>
 
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+    <script>
+        const canvas = document.getElementById('visualizerCanvas');
+        const audio = document.getElementById('audio');
+        const ctx = canvas.getContext('2d');
+        let audioContext, analyser, dataArray;
+
+        function setupCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function setupAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaElementSource(audio);
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            console.log("Audio setup complete.");
+            animate();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            analyser.getByteFrequencyData(dataArray);
+            const barWidth = (canvas.width / dataArray.length) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            for (let i = 0; i < dataArray.length; i++) {
+                barHeight = dataArray[i];
+                const hue = (i / dataArray.length) * 360; 
+                ctx.fillStyle = `hsl(${hue}, 100%, 50%)`; 
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1; 
             }
-            return response.text();
-        })
-        .then(data => {
-            document.open();
-            document.write(data);
-            document.close();
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-            document.body.innerHTML = 'Failed to load external content.';
-        });
-</script>
+
+            requestAnimationFrame(animate);
+        }
+
+        function enterSite() {
+            document.querySelector('.overlay').classList.add('fade-out');
+            audio.play().then(() => {
+                if (!audioContext) {
+                    setupAudio();
+                }
+            }).catch(error => {
+                console.log('Audio play failed:', error);
+            });
+        }
+
+        window.addEventListener('resize', setupCanvas);
+        setupCanvas();
+    </script>
 
 </body>
 </html>
