@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Voucan - Profile">
-    <meta property="og:description" content="View Voucan's profile card!">
+    <meta property="og:description" content="View Voucan's Profile">
     <meta property="og:image" content="https://i.ibb.co/bQmXfM8/vcngrey.webp">
     <title>Voucan - Profile</title>
     <link rel="icon" href="https://i.ibb.co/bQmXfM8/vcngrey.webp" type="image/png">
@@ -38,6 +38,12 @@
             font-weight: bold;
             z-index: 10;
             cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+
+        .overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .container {
@@ -110,13 +116,14 @@
 
     <audio id="audio" loop>
         <source src="https://us4-ubg.github.io/Super%20Ponybeat%20%20Discord%20%5BThe%20Original!%5D%20by%20Eurobeat.mp3" type="audio/mp3">
+
     </audio>
 
     <script>
         function enterSite() {
-            document.querySelector('.overlay').style.display = 'none';
-            const audio = document.getElementById('audio');
-            audio.play();
+            const overlay = document.querySelector('.overlay');
+            overlay.classList.add('fade-out');
+            document.getElementById('audio').play();
         }
     </script>
 
