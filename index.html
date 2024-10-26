@@ -99,7 +99,7 @@
     <div class="container">
         <img src="https://i.ibb.co/bQmXfM8/vcngrey.webp" alt="Voucan">
         <h1>Voucan</h1>
-        <div class="bio">Hi, I'm Voucan! I love to code; I know a bit of Lua, HTML, and JavaScript. You can find my unblocked games site below</div>
+        <div class="bio">Hi, I'm Voucan! I love to code; I know a bit of Lua, HTML, and JavaScript. You can find my unblocked games site below.</div>
         <div class="divider"></div>
         <div class="icons">
             <a href="https://discord.com/users/1043692379896557589" target="_blank"><i class="fa-brands fa-discord"></i></a>
@@ -132,18 +132,38 @@
             dataArray = new Uint8Array(analyser.frequencyBinCount);
             source.connect(analyser);
             analyser.connect(audioContext.destination);
+            console.log("Audio setup complete.");
             animate();
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             analyser.getByteFrequencyData(dataArray);
-            dataArray.forEach((value, index) => {
-                ctx.fillStyle = `rgba(${value}, ${index % 255}, ${255 - value}, 0.5)`;
-                ctx.beginPath();
-                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, value / 20, 0, Math.PI * 2);
-                ctx.fill();
-            });
+            const barWidth = (canvas.width / dataArray.length) * 2.5;
+            let barHeight;
+            let x = 0;
+
+
+            for (let i = 0; i < dataArray.length; i++) {
+                barHeight = dataArray[i] || 2.5; 
+                const hue = (i / dataArray.length) * 360; 
+                ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+
+           
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1; 
+            }
+
+
+            x = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                barHeight = dataArray[i]; 
+                const hue = (i / dataArray.length) * 360; 
+                ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1; 
+            }
+
             requestAnimationFrame(animate);
         }
 
