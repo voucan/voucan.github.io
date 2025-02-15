@@ -144,9 +144,9 @@
         }
       }
     </style>
-<script src="/particles.js"></script>
-  <script src="/app.js"></script>
-<div id="particles-js"></div>
+    <script src="/particles.js"></script>
+    <script src="/app.js"></script>
+    <div id="particles-js"></div>
   </head>
   <body>
     <div class="overlay" onclick="enterSite()">Click to Enter</div>
@@ -169,17 +169,21 @@
           <i class="fa-solid fa-video"></i>
         </a>
         <a href="/extension.html" target="_blank">
-		  <i class="fa fa-plug" aria-hidden="true"></i>
+          <i class="fa fa-plug" aria-hidden="true"></i>
         </a>
       </div>
     </div>
-    <audio id="audio" loop>
+    <audio id="hoverAudio">
+      <source src="/pages.dev/hover.mp3" type="audio/mp3">
+    </audio>
+    <audio id="enterAudio" loop>
       <source src="/pages.dev/audio.mp3" type="audio/mp3">
     </audio>
     <script>
       function enterSite() {
         document.querySelector('.overlay').classList.add('fade-out');
-        audio.play().then(() => {
+        const enterAudio = document.getElementById('enterAudio');
+        enterAudio.play().then(() => {
           if (!audioContext) {
             setupAudio();
           }
@@ -187,6 +191,15 @@
           console.log('Audio play failed:', error);
         });
       }
+
+      const hoverAudio = document.getElementById('hoverAudio');
+      const elementsToHover = document.querySelectorAll('button, img, .icons a');
+
+      elementsToHover.forEach(element => {
+        element.addEventListener('mouseover', () => {
+          hoverAudio.play();
+        });
+      });
     </script>
   </body>
 </html>
