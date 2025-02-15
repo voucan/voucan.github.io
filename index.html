@@ -73,7 +73,7 @@
             margin-bottom: 20px;
             border: 5px solid #fff;
             padding: 3px;
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.1s ease-in-out;
         }
         .container h1 {
             font-size: 32px;
@@ -133,7 +133,7 @@
 
     <canvas id="visualizerCanvas"></canvas>
     <audio id="audio" loop>
-        <source src="/pages.dev/499362072.mp3" type="audio/mp3">
+        <source src="/499362072.mp3" type="audio/mp3">
     </audio>
 
     <script>
@@ -164,13 +164,12 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             analyser.getByteFrequencyData(dataArray);
 
-            let total = 0;
-            for (let i = 0; i < dataArray.length; i++) {
-                total += dataArray[i];
-            }
-            const average = total / dataArray.length;
+            let maxVolume = Math.max(...dataArray);
+            const minScale = 1.0;
+            const maxScale = 1.5;
 
-            const scaleFactor = 1 + (average / 100);
+            let scaleFactor = minScale + (maxVolume / 256) * (maxScale - minScale);
+
             profilePicture.style.transform = `scale(${scaleFactor})`;
 
             requestAnimationFrame(animate);
