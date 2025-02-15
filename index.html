@@ -131,49 +131,11 @@
         </div>
     </div>
 
-    <canvas id="visualizerCanvas"></canvas>
     <audio id="audio" loop>
         <source src="/pages.dev/499362072.mp3" type="audio/mp3">
     </audio>
 
     <script>
-        const canvas = document.getElementById('visualizerCanvas');
-        const audio = document.getElementById('audio');
-        const ctx = canvas.getContext('2d');
-        const profilePicture = document.getElementById('profilePicture');
-        let audioContext, analyser, dataArray;
-
-        function setupCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        function setupAudio() {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioContext.createMediaElementSource(audio);
-            analyser = audioContext.createAnalyser();
-            analyser.fftSize = 256;
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            console.log("Audio setup complete.");
-            animate();
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            analyser.getByteFrequencyData(dataArray);
-
-            let maxVolume = Math.max(...dataArray);
-            const minScale = 1.0;
-            const maxScale = 1.5;
-
-            let scaleFactor = minScale + (maxVolume / 256) * (maxScale - minScale);
-
-            profilePicture.style.transform = `scale(${scaleFactor})`;
-
-            requestAnimationFrame(animate);
-        }
 
         function enterSite() {
             document.querySelector('.overlay').classList.add('fade-out');
