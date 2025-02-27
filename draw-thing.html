@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>really efficient drawing tool</title>
+	<style>
+		.block {
+			position: absolute;
+			width: 5px;
+			height: 5px;
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+<h5>draws images you put in idk i was bored</h5>
+	<input type="file" id="image-upload" accept="image/*">
+	<div id="image-container" style="position: relative; width: 800px; height: 600px;"></div>
+	<script>
+		const imageUpload = document.getElementById('image-upload');
+		const imageContainer = document.getElementById('image-container');
+
+		imageUpload.addEventListener('change', async (e) => {
+			const file = e.target.files[0];
+			const reader = new FileReader();
+			reader.onload = async (event) => {
+				const imageData = event.target.result;
+				const image = new Image();
+				image.onload = async () => {
+					const width = image.width;
+					const height = image.height;
+
+					for (let y = 0; y < height; y++) {
+						for (let x = 0; x < width; x++) {
+							const pixelColor = getPixelColor(image, x, y);
+							const block = document.createElement('div');
+							block.className = 'block';
+							block.style.top = `${y * 5}px`;
+							block.style.left = `${x * 5}px`;
+							block.style.background = `rgb(${pixelColor.r}, ${pixelColor.g}, ${pixelColor.b})`;
+							imageContainer.appendChild(block);
+
+							await new Promise(resolve => setTimeout(resolve, 1));
+						}
+					}
+				};
+				image.src = imageData;
+			};
+			reader.readAsDataURL(file);
+		});
+
+		function getPixelColor(image, x, y) {
+			const canvas = document.createElement('canvas');
+			const ctx = canvas.getContext('2d');
+			canvas.width = image.width;
+			canvas.height = image.height;
+			ctx.drawImage(image, 0, 0);
+			const pixelData = ctx.getImageData(x, y, 1, 1).data;
+			return {
+				r: pixelData[0],
+				g: pixelData[1],
+				b: pixelData[2]
+			};
+		}
+	</script>
+</body>
+</html>
