@@ -98,7 +98,7 @@
     <script src="/storage/js/apps.js"></script>
     <div id="particles-js"></div>
     <h1>Logged Links</h1>
-    <h5>Fetches links that have been visited by any user  - Not working? try the manually uploaded links: <a href="/us5-links2" target="_blank" style="color: blue;">Click Here</a></h5>
+    <h5>Fetches links that have been visited by any user</h5>
     <div id="linkGrid" class="grid"></div>
     <div id="emptyMsg" class="empty" style="display:none;"> Loading... </div>
     <div class="page">
@@ -106,8 +106,8 @@
       <button id="nextBtn">Next</button>
     </div>
     <script>
-      const logsApi = "https://tight-wind-574e.bijoh41469.workers.dev/logs";
-      const CACHE_KEY = "us5-cache";
+      const logsApi = "/storage/json/us5.json";
+      const CACHE_KEY = "us52-cache";
       const gridEl = document.getElementById("linkGrid");
       const emptyEl = document.getElementById("emptyMsg");
       const prev = document.getElementById("prevBtn");
